@@ -88,21 +88,27 @@ typedef enum request_states {
   speak,
   sse_listen
 } request_type;
-
+// use port 38044
 request_type parse_request(recv_buffer *ps) {
   // TODO: based on the bytes in the buffer, return a specific request type.
   // incomplete should be used when you can't tell what type of request this is,
   // so you have to wait for more bytes.
-  return incomplete;
+ // return incomplete;
   // root should be used when you've received a complete request, and you know
   // it's for index.html.
-  return root;
+  if(strchr(ps->requestbuf,'h') != NULL)
+  { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  return speak;
+  else if((strchr(ps->requestbuf,'P')) != NULL)
+  { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
-  return sse_listen;
+  else if(strchr(ps->requestbuf,'G') != NULL) {
+  	return sse_listen;
+  }
+
+  else { return incomplete; }
 }
 
 int main(int argc, char **argv) {
@@ -224,3 +230,4 @@ void check_clients(pool *p) {
       }
     }
   }
+}
