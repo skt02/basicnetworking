@@ -231,9 +231,9 @@ void check_clients(pool *p) {
           // The server needs to respond with an OK message, and send this message
           // to every currently listening client.
 	  extract_message(rb->requestbuf,buf);
-	  //for() {
-	//	  writen(connection, buf, strlen(buf);
-	 // }
+	  for(int a = 0; i<=p->maxi; ++i) {
+	  	writen(p->clientfd[i], buf, strlen(buf));
+	  }
           break;
         case sse_listen:
           // Don't forget to add this socket to the "listening sockets that
