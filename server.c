@@ -221,8 +221,8 @@ void check_clients(pool *p) {
 	  // send html and close the connection
           // The server needs to respond to requests for the index by sending a
           // valid HTTP response along with the content of the index file.
-          send(connfd, OK, strlen(OK),0);
-	  send(connfd, indexhtml, strlen(indexhtml), 0);
+          writen(connfd, OK, strlen(OK));
+	  writen(connfd, indexhtml, strlen(indexhtml));
 	  break;
         case speak:
           // The server needs to respond with an OK message, and send this message
