@@ -239,6 +239,7 @@ void check_clients(pool *p) {
           // Don't forget to add this socket to the "listening sockets that
           // should receive chat messages" list, and send back the relevant OK
           // message for a stream request.
+	  p->receiving_events[i] = 1;
 	  writen(connfd, stream, strlen(stream));
           break;
         default:
