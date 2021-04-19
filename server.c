@@ -209,9 +209,10 @@ void check_clients(pool *p) {
 	n = read(connfd, p->protos->requestbuf,sizeof(p->protos->requestbuf));
 	// n = read(connfd, buf, 4096);
 	fprintf(stderr, "got %d bytes on file descriptor %d\n%s",n,connfd,p->protos->requestbuf);
-	if(n==0)
-	close(connfd);
-
+	if(n==0){
+	close_and_remove(p,i);
+	continue;
+	}
       // TODO: based on the bytes received, move the protocol forward and
       // potentially send some bytes back to the client(s).
       switch (parse_request(rb)) {
@@ -223,6 +224,7 @@ void check_clients(pool *p) {
           // valid HTTP response along with the content of the index file.
           writen(connfd, OK, strlen(OK));
 	  writen(connfd, indexhtml, strlen(indexhtml));
+	  close_and_remove(p,i);
 	  break;
         case speak:
           // The server needs to respond with an OK message, and send this message
