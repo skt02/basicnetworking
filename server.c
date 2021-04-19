@@ -96,19 +96,19 @@ request_type parse_request(recv_buffer *ps) {
  // return incomplete;
   // root should be used when you've received a complete request, and you know
   // it's for index.html.
-  if(strchr(ps->requestbuf,'h') != NULL)
+  if(strstr(ps->requestbuf, "\r\n\r\n") == NULL)
+	  return incomplete;
+  if(strstr(ps->requestbuf,"GET /index.html") != NULL)
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  else if((strchr(ps->requestbuf,'P')) != NULL)
+  else if((strstr(ps->requestbuf,"POST /speak")) != NULL)
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
-  else if(strchr(ps->requestbuf,'G') != NULL) {
+  else if(strstr(ps->requestbuf,"GET /listen") != NULL) {
   	return sse_listen;
   }
-
-  else { return incomplete; }
 }
 
 int main(int argc, char **argv) {
@@ -197,6 +197,7 @@ void check_clients(pool *p) {
 
     if ((connfd > 0) && (FD_ISSET(connfd, &p->ready_set))) {
       p->nready--;
+      // use read function
       // TODO: for the file descriptor that is ready, accumulate the received
       // bytes into the right receive buffer at the right offset, and keep
       // track of how many bytes have been received (so that you can keep
@@ -204,6 +205,11 @@ void check_clients(pool *p) {
       // Hint: don't forget to take care of the special case where the number
       // of bytes received is zero: that means that the client ended the
       // conversation (sent EOF).
+fprintf(stderr, "got some bytes on file descriptor %d\n", connfd);
+n = read(connfd, buf, 4096);
+fprintf(stderr, "got %d bytes on file descriptor %d\n",n,connfd);
+if(n==0)
+	close(connfd);
 
       // TODO: based on the bytes received, move the protocol forward and
       // potentially send some bytes back to the client(s).
@@ -211,6 +217,7 @@ void check_clients(pool *p) {
         case incomplete:
           break;
         case root:
+	  // send html and close the connection
           // The server needs to respond to requests for the index by sending a
           // valid HTTP response along with the content of the index file.
           break;
