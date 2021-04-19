@@ -99,11 +99,11 @@ request_type parse_request(recv_buffer *ps) {
   // it's for index.html.
   if(strstr(ps->requestbuf, "\r\n\r\n") == NULL)
 	  return incomplete;
-  if(strstr(ps->requestbuf,"GET / HTTP/1.1\r\n") != NULL)
+  if(strstr(ps->requestbuf,"GET / HTTP/1.1\r\n") == ps->requestbuf)
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  else if(strstr(ps->requestbuf,"POST /") != NULL && strstr(ps->requestbuf," HTTP/1.1") != NULL)
+  else if(strstr(ps->requestbuf,"POST / HTTP/1.1") == ps->requestbuf)
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
