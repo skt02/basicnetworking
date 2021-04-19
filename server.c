@@ -102,11 +102,11 @@ request_type parse_request(recv_buffer *ps) {
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  else if(strstr(ps->requestbuf,"POST /speak") != NULL)
+  else if(strstr(ps->requestbuf,"POST") != NULL)
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
-  else if(strstr(ps->requestbuf,"GET /listen") != NULL) {
+  else if(strstr(ps->requestbuf,"GET") != NULL) {
   	return sse_listen;
   }
 }
@@ -239,6 +239,7 @@ void check_clients(pool *p) {
           // Don't forget to add this socket to the "listening sockets that
           // should receive chat messages" list, and send back the relevant OK
           // message for a stream request.
+	  writen(connfd, stream, strlen(stream));
           break;
         default:
           // If we recieve a full request but don't know what to do with it,
