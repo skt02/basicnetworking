@@ -86,7 +86,8 @@ typedef enum request_states {
   incomplete,
   root,
   speak,
-  sse_listen
+  sse_listen,
+  other
 } request_type;
 // use port 38044
 request_type parse_request(recv_buffer *ps) {
@@ -102,12 +103,15 @@ request_type parse_request(recv_buffer *ps) {
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  else if(strstr(ps->requestbuf,"POST") != NULL)
+  else if(strstr(ps->requestbuf,"POST /") != NULL && strstr(ps->requestbuf," HTTP/1.1") != NULL)
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
   else if(strstr(ps->requestbuf,"GET") != NULL) {
   	return sse_listen;
+  }
+else {
+	return other;
   }
 }
 
