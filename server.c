@@ -238,6 +238,8 @@ void check_clients(pool *p) {
         default:
           // If we recieve a full request but don't know what to do with it,
           // send back NOTOK and end the conversation.
+	  writen(connfd, NOTOK, strlen(NOTOK));
+	  close_and_remove(p,i);
           break;
       }
     }
