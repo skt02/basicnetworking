@@ -98,8 +98,12 @@ request_type parse_request(recv_buffer *ps) {
   // root should be used when you've received a complete request, and you know
   // it's for index.html.
   if(strstr(ps->requestbuf, "\r\n\r\n") == NULL)
-	  return incomplete;
-  if(strstr(ps->requestbuf,"GET / HTTP/1.1\r\n") == ps->requestbuf)
+  	{ return incomplete; }
+  else if(strstr(ps->requestbuf,"GET /") == ps->requestbuf && strstr(ps->requestbuf,"/listen") != NULL)  {
+		        return sse_listen;}
+ // else if(strstr(ps->requestbuf, "\r\n\r\n") == NULL)
+//	  return incomplete;
+  else if(strstr(ps->requestbuf,"GET / HTTP/1.1\r\n") == ps->requestbuf)
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
