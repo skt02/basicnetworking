@@ -234,6 +234,8 @@ void check_clients(pool *p) {
 	  for(int a = 0; a<=p->maxi; ++a) {
 	  if(p->receiving_events[a]==1){writen(p->clientfd[a], buf, strlen(buf));}
 	  }
+	  writen(connfd, OK, strlen(OK));
+	  close_and_remove(p,i);
           break;
         case sse_listen:
           // Don't forget to add this socket to the "listening sockets that
