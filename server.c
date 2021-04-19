@@ -206,7 +206,8 @@ void check_clients(pool *p) {
       // of bytes received is zero: that means that the client ended the
       // conversation (sent EOF).
 	fprintf(stderr, "got some bytes on file descriptor %d\n", connfd);
-	n = read(connfd, p->protos->requestbuf,sizeof(p->protos->requestbuf));
+	n = read(connfd, rb->requestbuf + rb->first_empty_byte,sizeof(rb->requestbuf)-rb->first_empty_byte);
+	rb->first_empty_byte += n;
 	// n = read(connfd, buf, 4096);
 	fprintf(stderr, "got %d bytes on file descriptor %d\n%s",n,connfd,p->protos->requestbuf);
 	if(n==0){
@@ -229,6 +230,10 @@ void check_clients(pool *p) {
         case speak:
           // The server needs to respond with an OK message, and send this message
           // to every currently listening client.
+	  extract_message(rb->requestbuf,buf);
+	  //for() {
+	//	  writen(connection, buf, strlen(buf);
+	 // }
           break;
         case sse_listen:
           // Don't forget to add this socket to the "listening sockets that
