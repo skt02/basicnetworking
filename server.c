@@ -205,10 +205,11 @@ void check_clients(pool *p) {
       // Hint: don't forget to take care of the special case where the number
       // of bytes received is zero: that means that the client ended the
       // conversation (sent EOF).
-fprintf(stderr, "got some bytes on file descriptor %d\n", connfd);
-n = read(connfd, buf, 4096);
-fprintf(stderr, "got %d bytes on file descriptor %d\n",n,connfd);
-if(n==0)
+	fprintf(stderr, "got some bytes on file descriptor %d\n", connfd);
+	n = read(connfd, p->protos->requestbuf,sizeof(p->protos->requestbuf));
+	// n = read(connfd, buf, 4096);
+	fprintf(stderr, "got %d bytes on file descriptor %d\n%s",n,connfd,p->protos->requestbuf);
+	if(n==0)
 	close(connfd);
 
       // TODO: based on the bytes received, move the protocol forward and
