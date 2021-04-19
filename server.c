@@ -107,7 +107,7 @@ request_type parse_request(recv_buffer *ps) {
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
-  else if(strstr(ps->requestbuf,"GET /listen") != NULL)  {
+  else if(strstr(ps->requestbuf,"GET /listen") == ps->requestbuf)  {
   	return sse_listen;
   }
 else {
