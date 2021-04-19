@@ -98,11 +98,11 @@ request_type parse_request(recv_buffer *ps) {
   // it's for index.html.
   if(strstr(ps->requestbuf, "\r\n\r\n") == NULL)
 	  return incomplete;
-  if(strstr(ps->requestbuf,"GET /index.html") != NULL)
+  if(strstr(ps->requestbuf,"GET / HTTP/1.1\r\n") != NULL)
   { return root; }
   // speak should be used when you've received a complete request, and you know
   // it's a POST message for the resource /speak.
-  else if((strstr(ps->requestbuf,"POST /speak")) != NULL)
+  else if(strstr(ps->requestbuf,"POST /speak") != NULL)
   { return speak; }
   // sse_listen should be used when you've received a complete request, and you
   // know it's for the /listen endpoint.
@@ -221,7 +221,9 @@ void check_clients(pool *p) {
 	  // send html and close the connection
           // The server needs to respond to requests for the index by sending a
           // valid HTTP response along with the content of the index file.
-          break;
+          send(connfd, OK, strlen(OK),0);
+	  send(connfd, indexhtml, strlen(indexhtml), 0);
+	  break;
         case speak:
           // The server needs to respond with an OK message, and send this message
           // to every currently listening client.
