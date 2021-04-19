@@ -232,7 +232,7 @@ void check_clients(pool *p) {
           // to every currently listening client.
 	  extract_message(rb->requestbuf,buf);
 	  for(int a = 0; i<=p->maxi; ++i) {
-	  	writen(p->clientfd[i], buf, strlen(buf));
+	  	writen(p->clientfd[a], buf, strlen(buf));
 	  }
           break;
         case sse_listen:
